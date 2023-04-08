@@ -1,0 +1,6 @@
+**/__pycache__
+.pth
+logs
+__pycache__
+.ipynb_checkpoints
+.*.swp
