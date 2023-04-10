@@ -7,4 +7,4 @@ from rest_framework.decorators import api_view
 def speech(request):
     word = request.data.get('word')
     print(word)
-    return Response(word)
+    return Response("后端接收到文本之后翻译的内容放这里")
