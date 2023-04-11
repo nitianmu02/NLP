@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-// import { Button, Form, Input, Select, message} from 'antd'
 import {api} from '../api/api'
 import '../css/main.css'
 function English() {

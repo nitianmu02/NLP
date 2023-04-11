@@ -1,1 +1,0 @@
-npm install rc-tween-one --save
