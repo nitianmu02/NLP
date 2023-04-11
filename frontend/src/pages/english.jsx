@@ -50,6 +50,7 @@ function English() {
 
     const handleclick = ()=> {
         navigate('/chinese/')
+        window.location.reload();
     }
 
     return (

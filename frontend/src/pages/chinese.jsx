@@ -50,6 +50,7 @@ function English() {
 
     const handleclick = ()=> {
         navigate('/english/')
+        window.location.reload();
     }
     return (
         <div className="main">
