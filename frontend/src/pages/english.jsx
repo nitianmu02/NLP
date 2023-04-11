@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 // import { Button, Form, Input, Select, message} from 'antd'
-import {api} from '../../src/api/api'
-function Main() {
+import {api} from '../api/api'
+import '../css/main.css'
+function English() {
+    const navigate = useNavigate()
     const [spokenText, setSpokenText] = useState('')
     const [interimTranscript, setInterimTranscript] = useState('')
     const [translatedText, setTranslatedText] = useState('');
@@ -9,7 +12,6 @@ function Main() {
 
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = 'zh-CN';
 
     const sendSpeechToBackend = async (speechData) => {
         if (speechData.trim() === '') {
@@ -24,15 +26,13 @@ function Main() {
         let interimTranscript = ''
         for (let i = event.resultIndex; i < event.results.length; i++) {
           if (event.results[i].isFinal) {
-            const newSpokenText = event.results[i][0].transcript;
-            setSpokenText((prevSpokenTexts) => [...prevSpokenTexts, ' ', newSpokenText]);
+            setSpokenText(event.results[i][0].transcript)
           } else {
             interimTranscript += event.results[i][0].transcript + ''
           }
         }
         setInterimTranscript(interimTranscript)
-    };
-
+    }
     recognition.onend = () => {
         recognition.start()
     }
@@ -48,14 +48,22 @@ function Main() {
         }
     }, [interimTranscript]);
 
+    const handleclick = ()=> {
+        navigate('/chinese/')
+    }
+
     return (
-        <div>
-            <h1>test</h1>
-            <div style={{ fontSize: '24px'}}>{spokenText} </div>
-            <div style={{ fontSize: '18px'}}>{interimTranscript}</div>
-            <div style={{ fontSize: '24px' }}>translate：{translatedText}</div>
+        <div className="main">
+            <section className="main-content">
+                <div className="title">Text:</div>
+                <div className="spoken">{spokenText} </div>
+                <div className="interim">{interimTranscript !== '' ? interimTranscript : 'Say something in English...'}</div>
+                <div className="title2">Translate:</div>
+                <div className="translate">{translatedText}</div>
+                <button className="btn" onClick={handleclick}>Chinese to English</button>
+            </section>
         </div>
     )
 }
 
-export default Main 
+export default English 

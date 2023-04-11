@@ -1,0 +1,35 @@
+button {
+    border: 1px solid #fff;
+    background-color: transparent;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  
+button:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+.button1-content{
+    position: absolute;
+    top: 45%;
+    left: 43.5%;
+    font-size: 20px;
+}
+
+.button2-content{
+    position: absolute;
+    top: 55%;
+    left: 43.5%;
+    font-size: 20px;
+}
+
+.button1{
+    width: 250px;
+}
+.button2{
+    width: 250px;
+}
