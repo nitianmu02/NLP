@@ -8,6 +8,8 @@ npm install rc-texty --save
 
 npm install rc-queue-anim --save
 
+npm install jieba
+
 backend
 
 pip install django

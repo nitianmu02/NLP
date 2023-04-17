@@ -13,12 +13,15 @@ function English() {
     recognition.interimResults = true;
 
     const sendSpeechToBackend = async (speechData) => {
-        if (speechData.trim() === '') {
-            return
+        const words = speechData.trim().split(' ')
+        for(const word of words){
+            if(word === ''){
+                continue
+            }
+            const res = await api.post('/speech/',{word:word})
+            setTranslatedText(res.data)
+            console.log('backend:' + res.data);
         }
-        const res = await api.post('/speech/',{word:speechData})
-        setTranslatedText(res.data)
-        console.log('backend:' + res.data);
     }
 
     recognition.onresult = (event) => {

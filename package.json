@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@node-rs/jieba": "^1.6.2",
+    "node-gyp": "^9.3.1"
+  }
+}

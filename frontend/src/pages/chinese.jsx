@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import {api} from '../api/api'
 import '../css/main.css'
-function English() {
+function Chinese() {
     const navigate = useNavigate()
     const [spokenText, setSpokenText] = useState('')
     const [interimTranscript, setInterimTranscript] = useState('')
@@ -14,12 +14,12 @@ function English() {
     recognition.lang = 'zh-CN';
 
     const sendSpeechToBackend = async (speechData) => {
-        if (speechData.trim() === '') {
-            return
+        const words = speechData.trim().split(/([\u4E00-\u9FFF])/g).filter(word => word.trim() !== '')
+        for(const word of words){
+            const res = await api.post('/speech/',{word:word})
+            setTranslatedText(res.data)
+            console.log('backend:' + res.data)
         }
-        const res = await api.post('/speech/',{word:speechData})
-        setTranslatedText(res.data)
-        console.log('backend:' + res.data);
     }
 
     recognition.onresult = (event) => {
@@ -66,4 +66,4 @@ function English() {
     )
 }
 
-export default English 
+export default Chinese 
