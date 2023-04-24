@@ -1,16 +1,14 @@
-frontend
+frontend:
 
-npm install react-router-dom
+cd frontend
 
-npm install axios
+npm install
 
-npm install rc-texty --save 
+npm start
 
-npm install rc-queue-anim --save
+backend:
 
-npm install jieba
-
-backend
+cd backend
 
 pip install django
 
@@ -19,3 +17,5 @@ pip install django-core
 pip install django-cors-headers
 
 pip install djangorestframework
+
+python manage.py runserver
