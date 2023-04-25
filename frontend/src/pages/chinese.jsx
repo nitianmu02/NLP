@@ -14,7 +14,7 @@ function Chinese() {
     recognition.lang = 'zh-CN';
 
     const sendSpeechToBackend = async (speechData) => {
-        const words = speechData.trim().split(/([\u4E00-\u9FFF])/g).filter(word => word.trim() !== '')
+        const words = speechData.trim().split(' ')
         for(const word of words){
             const res = await api.post('/speech/',{word:word})
             setTranslatedText(res.data)
