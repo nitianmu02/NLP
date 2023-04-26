@@ -14,8 +14,7 @@ function Chinese() {
     recognition.lang = 'zh-CN';
 
     const sendSpeechToBackend = async (speechData) => {
-        const words = speechData.trim().split(/([\u4E00-\u9FFF])/g).filter(word => word.trim() !== '')
-        const res = await api.post('/speech/', { words: words })
+        const res = await api.post('/speech/', { words: speechData })
         setTranslatedText(res.data)
         console.log('backend:' + res.data)
     }
@@ -41,10 +40,8 @@ function Chinese() {
     }, [])
 
     useEffect(() => {
-        if (interimTranscript.trim() !== '') {
-            sendSpeechToBackend(interimTranscript.trim());
-        }
-    }, [interimTranscript])
+        sendSpeechToBackend(spokenText)
+    }, [spokenText])
 
 
     const handleclick = () => {
