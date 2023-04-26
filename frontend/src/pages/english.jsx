@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import {api} from '../api/api'
+import { api } from '../api/api'
 import '../css/main.css'
 function English() {
     const navigate = useNavigate()
@@ -14,24 +14,20 @@ function English() {
 
     const sendSpeechToBackend = async (speechData) => {
         const words = speechData.trim().split(' ')
-        for(const word of words){
-            if(word === ''){
-                continue
-            }
-            const res = await api.post('/speech/',{word:word})
-            setTranslatedText(res.data)
-            console.log('backend:' + res.data);
-        }
+        const res = await api.post('/speech/', { words: words })
+        setTranslatedText(res.data)
+        console.log('backend:' + res.data)
     }
+
 
     recognition.onresult = (event) => {
         let interimTranscript = ''
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          if (event.results[i].isFinal) {
-            setSpokenText(event.results[i][0].transcript)
-          } else {
-            interimTranscript += event.results[i][0].transcript + ''
-          }
+            if (event.results[i].isFinal) {
+                setSpokenText(event.results[i][0].transcript)
+            } else {
+                interimTranscript += event.results[i][0].transcript + ''
+            }
         }
         setInterimTranscript(interimTranscript)
     }
@@ -41,18 +37,18 @@ function English() {
 
     useEffect(() => {
         recognition.start()
-    // eslint-disable-next-line 
+        // eslint-disable-next-line 
     }, [])
 
     useEffect(() => {
         if (interimTranscript.trim() !== '') {
-          sendSpeechToBackend(interimTranscript.trim());
+            sendSpeechToBackend(interimTranscript.trim());
         }
-    }, [interimTranscript]);
+    }, [interimTranscript])
 
-    const handleclick = ()=> {
+    const handleclick = () => {
         navigate('/chinese/')
-        window.location.reload();
+        window.location.reload()
     }
 
     return (
