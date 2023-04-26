@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import {api} from '../api/api'
+import { api } from '../api/api'
 import '../css/main.css'
 function Chinese() {
     const navigate = useNavigate()
@@ -14,22 +14,20 @@ function Chinese() {
     recognition.lang = 'zh-CN';
 
     const sendSpeechToBackend = async (speechData) => {
-        const words = speechData.trim().split(' ')
-        for(const word of words){
-            const res = await api.post('/speech/',{word:word})
-            setTranslatedText(res.data)
-            console.log('backend:' + res.data)
-        }
+        const words = speechData.trim().split(/([\u4E00-\u9FFF])/g).filter(word => word.trim() !== '')
+        const res = await api.post('/speech/', { words: words })
+        setTranslatedText(res.data)
+        console.log('backend:' + res.data)
     }
 
     recognition.onresult = (event) => {
         let interimTranscript = ''
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          if (event.results[i].isFinal) {
-            setSpokenText(event.results[i][0].transcript)
-          } else {
-            interimTranscript += event.results[i][0].transcript + ''
-          }
+            if (event.results[i].isFinal) {
+                setSpokenText(event.results[i][0].transcript)
+            } else {
+                interimTranscript += event.results[i][0].transcript + ''
+            }
         }
         setInterimTranscript(interimTranscript)
     }
@@ -39,18 +37,19 @@ function Chinese() {
 
     useEffect(() => {
         recognition.start()
-    // eslint-disable-next-line 
+        // eslint-disable-next-line 
     }, [])
 
     useEffect(() => {
         if (interimTranscript.trim() !== '') {
-          sendSpeechToBackend(interimTranscript.trim());
+            sendSpeechToBackend(interimTranscript.trim());
         }
-    }, [interimTranscript]);
+    }, [interimTranscript])
 
-    const handleclick = ()=> {
+
+    const handleclick = () => {
         navigate('/english/')
-        window.location.reload();
+        window.location.reload()
     }
     return (
         <div className="main">
