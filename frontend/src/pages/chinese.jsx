@@ -9,9 +9,9 @@ function Chinese() {
     const [translatedText, setTranslatedText] = useState('');
     const recognition = new window.webkitSpeechRecognition()
 
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = 'zh-CN';
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.lang = 'zh-CN'
 
     const sendSpeechToBackend = async (speechData) => {
         const res = await api.post('/speech/', { words: speechData })
