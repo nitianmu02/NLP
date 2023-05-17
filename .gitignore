@@ -4,3 +4,7 @@ logs
 __pycache__
 .ipynb_checkpoints
 .*.swp
+*.pyc
+*.json
+*lock
+/backend/mysite/__pycache__
