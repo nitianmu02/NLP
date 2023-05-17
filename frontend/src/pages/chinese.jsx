@@ -1,53 +1,66 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { api } from '../api/api'
-import '../css/main.css'
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import '../css/main.css';
+
 function Chinese() {
-    const navigate = useNavigate()
-    const [spokenText, setSpokenText] = useState('')
-    const [interimTranscript, setInterimTranscript] = useState('')
+    const navigate = useNavigate();
+    const [spokenText, setSpokenText] = useState('');
+    const [interimTranscript, setInterimTranscript] = useState('');
     const [translatedText, setTranslatedText] = useState('');
-    const recognition = new window.webkitSpeechRecognition()
 
-    recognition.continuous = true
-    recognition.interimResults = true
-    recognition.lang = 'zh-CN'
+    const sendSpeechToBackend = (speechData) => {
+        const socket = new WebSocket('ws://localhost:8000/ws/result/');
+        socket.onopen = () => {
+            console.log('WebSocket connection established');
+            socket.send(JSON.stringify({ words: speechData }));
+        };
+        socket.onmessage = (event) => {
+            const res = JSON.parse(event.data);
+            console.log('res:', res);
+            setTranslatedText(res.message);
 
-    const sendSpeechToBackend = async (speechData) => {
-        const res = await api.post('/speech/', { words: speechData })
-        setTranslatedText(res.data)
-        console.log('backend:' + res.data)
-    }
+            socket.close();
+        };
+    };
 
-    recognition.onresult = (event) => {
-        let interimTranscript = ''
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-            if (event.results[i].isFinal) {
-                setSpokenText(event.results[i][0].transcript)
-            } else {
-                interimTranscript += event.results[i][0].transcript + ''
+    useEffect(() => {
+        const recognition = new window.webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'zh-CN';
+
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) {
+                    setSpokenText(event.results[i][0].transcript);
+                } else {
+                    interimTranscript += event.results[i][0].transcript + ' ';
+                }
             }
-        }
-        setInterimTranscript(interimTranscript)
-    }
-    recognition.onend = () => {
-        recognition.start()
-    }
+            setInterimTranscript(interimTranscript);
+        };
+
+        recognition.onend = () => {
+            recognition.start();
+        };
+
+        recognition.start();
+
+        return () => {
+            recognition.stop();
+        };
+    }, []);
 
     useEffect(() => {
-        recognition.start()
-        // eslint-disable-next-line 
-    }, [])
-
-    useEffect(() => {
-        sendSpeechToBackend(spokenText)
-    }, [spokenText])
-
+        sendSpeechToBackend(spokenText);
+    }, [spokenText]);
 
     const handleclick = () => {
-        navigate('/english/')
-        window.location.reload()
-    }
+        navigate('/english/');
+        window.location.reload();
+    };
+
     return (
         <div className="main">
             <section className="main-content">
@@ -59,7 +72,7 @@ function Chinese() {
                 <button className="btn" onClick={handleclick}>英 译 中</button>
             </section>
         </div>
-    )
+    );
 }
 
-export default Chinese 
+export default Chinese;

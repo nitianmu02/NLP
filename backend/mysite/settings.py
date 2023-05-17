@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'channels',
     'corsheaders',
     'rest_framework',
     'nlp.apps.NlpConfig'
@@ -61,6 +62,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "mysite.wsgi.application"
+ASGI_APPLICATION = "mysite.asgi.application"
+
 
 
 # Database
@@ -111,3 +114,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+CHANNEL_LAYERS = {
+     "default": {
+         "BACKEND": "channels.layers.InMemoryChannelLayer",
+     }
+}
