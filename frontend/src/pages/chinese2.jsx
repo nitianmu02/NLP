@@ -2,17 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import '../css/main.css';
 
-function English() {
+function Chinese2() {
     const navigate = useNavigate();
     const [spokenText, setSpokenText] = useState('');
     const [interimTranscript, setInterimTranscript] = useState('');
     const [translatedText, setTranslatedText] = useState('');
 
     const sendSpeechToBackend = (speechData) => {
-        const socket = new WebSocket('ws://localhost:8000/ws/result/');
+        const socket = new WebSocket('ws://localhost:8000/ws/result/')
+        const words = speechData.trim().split(/([\u4E00-\u9FFF])/g).filter(word => word.trim() !== '')
         socket.onopen = () => {
             console.log('WebSocket connection established');
-            socket.send(JSON.stringify({ words: speechData }));
+            socket.send(JSON.stringify({ words: words }));
         };
         socket.onmessage = (event) => {
             const res = JSON.parse(event.data);
@@ -27,6 +28,7 @@ function English() {
         const recognition = new window.webkitSpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
+        recognition.lang = 'zh-CN';
 
         recognition.onresult = (event) => {
             let interimTranscript = '';
@@ -52,26 +54,29 @@ function English() {
     }, []);
 
     useEffect(() => {
-        sendSpeechToBackend(spokenText);
-    }, [spokenText]);
+        if (interimTranscript.trim() !== '') {
+            sendSpeechToBackend(interimTranscript.trim());
+        }
+    }, [interimTranscript])
+
 
     const handleclick = () => {
-        navigate('/english/');
+        navigate('/english2/');
         window.location.reload();
     };
 
     return (
         <div className="main">
             <section className="main-content">
-                <div className="title">Text: </div>
+                <div className="title">文本：</div>
                 <div className="spoken">{spokenText}</div>
-                <div className="interim">{interimTranscript !== '' ? interimTranscript : 'Say something in English...'}</div>
-                <div className="title2">Translate: </div>
+                <div className="interim">{interimTranscript !== '' ? interimTranscript : '用中文说点什么...'}</div>
+                <div className="title2">翻译：</div>
                 <div className="translate">{translatedText}</div>
-                <button className="btn" onClick={handleclick}>Chinese to English</button>
+                <button className="btn" onClick={handleclick}>英 译 中</button>
             </section>
         </div>
     );
 }
 
-export default English;
+export default Chinese2;
