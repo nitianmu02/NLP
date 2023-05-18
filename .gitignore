@@ -6,5 +6,6 @@ __pycache__
 .*.swp
 *.pyc
 *.json
-*lock
+*.lock
+*.json
 /backend/mysite/__pycache__
