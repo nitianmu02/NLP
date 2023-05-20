@@ -1,6 +1,6 @@
 from django.urls import path
-from . import views
+from nlp import main
 
 urlpatterns = [
-    path('speech/', views.speech, name='speech'),
+    path('speech/', main.start, name='speech'),
 ]

@@ -19,7 +19,6 @@ function English() {
         console.log('backend:' + res.data)
     }
 
-
     recognition.onresult = (event) => {
         let interimTranscript = ''
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -31,6 +30,7 @@ function English() {
         }
         setInterimTranscript(interimTranscript)
     }
+    
     recognition.onend = () => {
         recognition.start()
     }

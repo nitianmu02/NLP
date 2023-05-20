@@ -2,8 +2,8 @@ import {HashRouter, Route, Routes} from 'react-router-dom'
 import English from './pages/english'
 import Chinese from './pages/chinese'
 import Start from './pages/start';
-import { BrowserRouter as Router, Switch } from "react-router-dom";
-import Chat from "./Chat";
+import Test from './pages/test'
+
 function App() {
   // return (
   //   <HashRouter>
@@ -15,11 +15,15 @@ function App() {
   //   </HashRouter>
   // )
   return (
-    <Routes>
-        <Route path="/chat/:room_name" component={Chat} />
-        {/* 其他路由 */}
-    </Routes>
-  );
+    <HashRouter>
+      <Routes>
+          <Route path="" element = {<Start/>}/>
+          <Route path="english" element = {<English/>}/>
+          <Route path="chinese" element = {<Chinese/>}/>
+          <Route path="test" element = {<Test/>}/>
+      </Routes>
+    </HashRouter>
+  )
 }
 
 export default App;
