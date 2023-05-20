@@ -71,10 +71,8 @@ function Chinese() {
     }, []);
 
     useEffect(() => {
-        if (interimTranscript.trim() !== '') {
-            sendSpeechToBackend(interimTranscript.trim());
-        }
-    }, [interimTranscript])
+        sendSpeechToBackend(spokenText);
+    }, [spokenText])
 
     useEffect(() => {
         

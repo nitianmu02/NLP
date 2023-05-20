@@ -6,10 +6,11 @@ function Chinese2() {
     const navigate = useNavigate();
     const [spokenText, setSpokenText] = useState('');
     const [interimTranscript, setInterimTranscript] = useState('');
-    const [translatedText, setTranslatedText] = useState('');
+    const [translatedText, setTranslatedText] = useState('')
+    const [audioData, setAudioData] = useState(null);
 
     const sendSpeechToBackend = (speechData) => {
-        const socket = new WebSocket('ws://localhost:8000/ws/result/')
+        const socket = new WebSocket('ws://localhost:8000/ws/result2/')
         const words = speechData.trim().split(/([\u4E00-\u9FFF])/g).filter(word => word.trim() !== '')
         socket.onopen = () => {
             console.log('WebSocket connection established');
@@ -19,9 +20,30 @@ function Chinese2() {
             const res = JSON.parse(event.data);
             console.log('res:', res);
             setTranslatedText(res.message);
-
+            setAudioData(res.audio);
             socket.close();
         };
+    };
+    const playAudio = () => {
+        if (audioData) {
+            const audioBlob = base64ToBlob(audioData, 'audio/mpeg');
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+            audio.addEventListener('ended', () => {
+                audio.pause();
+                URL.revokeObjectURL(audioUrl);
+            });
+            audio.play();
+        }
+    };
+    const base64ToBlob = (base64Data, contentType) => {
+        const byteCharacters = atob(base64Data);
+        const byteArrays = [];
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteArrays.push(byteCharacters.charCodeAt(i));
+        }
+        const byteArray = new Uint8Array(byteArrays);
+        return new Blob([byteArray], { type: contentType });
     };
 
     useEffect(() => {
@@ -58,6 +80,12 @@ function Chinese2() {
             sendSpeechToBackend(interimTranscript.trim());
         }
     }, [interimTranscript])
+
+    useEffect(() => {
+        
+        playAudio();
+        // eslint-disable-next-line
+    }, [audioData]);
 
 
     const handleclick = () => {
