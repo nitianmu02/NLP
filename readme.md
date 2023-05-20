@@ -12,9 +12,9 @@ backend:
 
 cd backend
 
-pip install django == 3.1
+pip install django==3.1
 
-pip install channels == 3.0.1
+pip install channels==3.0.1
 
 pip install django-core
 
@@ -25,5 +25,7 @@ pip install djangorestframework
 pip install deepmultilingualpunctuation
 
 pip install pysbd
+
+pip install google-cloud-texttospeech
 
 python manage.py runserver

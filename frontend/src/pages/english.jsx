@@ -1,68 +1,77 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { api } from '../api/api'
-import '../css/main.css'
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import '../css/main.css';
+
 function English() {
-    const navigate = useNavigate()
-    const [spokenText, setSpokenText] = useState('')
-    const [interimTranscript, setInterimTranscript] = useState('')
+    const navigate = useNavigate();
+    const [spokenText, setSpokenText] = useState('');
+    const [interimTranscript, setInterimTranscript] = useState('');
     const [translatedText, setTranslatedText] = useState('');
-    const recognition = new window.webkitSpeechRecognition()
 
-    recognition.continuous = true;
-    recognition.interimResults = true;
+    const sendSpeechToBackend = (speechData) => {
+        const socket = new WebSocket('ws://localhost:8000/ws/result/');
+        socket.onopen = () => {
+            console.log('WebSocket connection established');
+            socket.send(JSON.stringify({ words: speechData }));
+        };
+        socket.onmessage = (event) => {
+            const res = JSON.parse(event.data);
+            console.log('res:', res);
+            setTranslatedText(res.message);
 
-    const sendSpeechToBackend = async (speechData) => {
-        const words = speechData.trim().split(' ')
-        const res = await api.post('/speech/', { words: words })
-        setTranslatedText(res.data)
-        console.log('backend:' + res.data)
-    }
+            socket.close();
+        };
+    };
 
-    recognition.onresult = (event) => {
-        let interimTranscript = ''
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-            if (event.results[i].isFinal) {
-                setSpokenText(event.results[i][0].transcript)
-            } else {
-                interimTranscript += event.results[i][0].transcript + ''
+    useEffect(() => {
+        const recognition = new window.webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) {
+                    setSpokenText(event.results[i][0].transcript);
+                } else {
+                    interimTranscript += event.results[i][0].transcript + ' ';
+                }
             }
-        }
-        setInterimTranscript(interimTranscript)
-    }
-    
-    recognition.onend = () => {
-        recognition.start()
-    }
+            setInterimTranscript(interimTranscript);
+        };
+
+        recognition.onend = () => {
+            recognition.start();
+        };
+
+        recognition.start();
+
+        return () => {
+            recognition.stop();
+        };
+    }, []);
 
     useEffect(() => {
-        recognition.start()
-        // eslint-disable-next-line 
-    }, [])
-
-    useEffect(() => {
-        if (interimTranscript.trim() !== '') {
-            sendSpeechToBackend(interimTranscript.trim());
-        }
-    }, [interimTranscript])
+        sendSpeechToBackend(spokenText);
+    }, [spokenText]);
 
     const handleclick = () => {
-        navigate('/chinese/')
-        window.location.reload()
-    }
+        navigate('/chinese/');
+        window.location.reload();
+    };
 
     return (
         <div className="main">
             <section className="main-content">
-                <div className="title">Text:</div>
-                <div className="spoken">{spokenText} </div>
+                <div className="title">Text: </div>
+                <div className="spoken">{spokenText}</div>
                 <div className="interim">{interimTranscript !== '' ? interimTranscript : 'Say something in English...'}</div>
-                <div className="title2">Translate:</div>
+                <div className="title2">Translate: </div>
                 <div className="translate">{translatedText}</div>
                 <button className="btn" onClick={handleclick}>Chinese to English</button>
             </section>
         </div>
-    )
+    );
 }
 
-export default English 
+export default English;

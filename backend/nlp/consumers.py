@@ -9,6 +9,8 @@ import time
 import nltk
 import spacy
 import predictor
+import base64
+from google.cloud import texttospeech
 
 seg_chn = pysbd.Segmenter(language="zh", clean=False)
 seg_eng = pysbd.Segmenter(language="en", clean=False)
@@ -32,15 +34,36 @@ class SpeechConsumer(AsyncWebsocketConsumer):
         words = data.get('words')
         print("frontend:", words)
         buf.append(words)
-        main.buf.append(words)
         if words:
-            await self.send_message(words)
+            
+            await self.send_audio(words)
 
-    async def send_message(self, message):
-        # Send a message to the WebSocket connection
-        await self.send(json.dumps({
-            'message': message
+    async def send_audio(self, message, audio_data):
+        # Convert audio data to base64
+        encoded_audio = base64.b64encode(audio_data).decode('utf-8')
+        print("audio: ", encoded_audio)
+        # Send the audio data to the WebSocket connection
+        await self.send(text_data=json.dumps({
+            'message': message,
+            'audio': encoded_audio
         }))
+        
+    async def text_to_speech(self, text):
+        tts_client = texttospeech.TextToSpeechClient.from_service_account_json('tensile-sorter-373800-fe36c81d1e4f.json')
+
+        synthesis_input = texttospeech.SynthesisInput(text=text)
+        voice = texttospeech.VoiceSelectionParams(
+            language_code='zh-CN', ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+        )
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.MP3
+        )
+
+        response = tts_client.synthesize_speech(
+            input=synthesis_input, voice=voice, audio_config=audio_config
+        )
+
+        return response.audio_content
 
 def translate_thread():
     global buf, time_out_counter
