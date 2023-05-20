@@ -26,4 +26,6 @@ pip install deepmultilingualpunctuation
 
 pip install pysbd
 
+pip install google-cloud-texttospeech
+
 python manage.py runserver

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import '../css/main.css';
 
@@ -7,20 +7,38 @@ function Chinese() {
     const [spokenText, setSpokenText] = useState('');
     const [interimTranscript, setInterimTranscript] = useState('');
     const [translatedText, setTranslatedText] = useState('');
+    const [audioData, setAudioData] = useState(null);
 
     const sendSpeechToBackend = (speechData) => {
         const socket = new WebSocket('ws://localhost:8000/ws/result/');
         socket.onopen = () => {
             console.log('WebSocket connection established');
-            socket.send(JSON.stringify({ words: speechData }));
-        };
+            socket.send(JSON.stringify({ words: speechData }))
+        }
         socket.onmessage = (event) => {
             const res = JSON.parse(event.data);
             console.log('res:', res);
             setTranslatedText(res.message);
-
+            setAudioData(res.audio);
             socket.close();
-        };
+        }
+    }
+    const playAudio = () => {
+        if (audioData) {
+            const audioBlob = base64ToBlob(audioData, 'audio/mpeg');
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+            audio.play();
+        }
+    };
+    const base64ToBlob = (base64Data, contentType) => {
+        const byteCharacters = atob(base64Data);
+        const byteArrays = [];
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteArrays.push(byteCharacters.charCodeAt(i));
+        }
+        const byteArray = new Uint8Array(byteArrays);
+        return new Blob([byteArray], { type: contentType });
     };
 
     useEffect(() => {
@@ -53,8 +71,16 @@ function Chinese() {
     }, []);
 
     useEffect(() => {
-        sendSpeechToBackend(spokenText);
-    }, [spokenText]);
+        if (interimTranscript.trim() !== '') {
+            sendSpeechToBackend(interimTranscript.trim());
+        }
+    }, [interimTranscript])
+
+    useEffect(() => {
+        
+        playAudio();
+        // eslint-disable-next-line
+    }, [audioData]);
 
     const handleclick = () => {
         navigate('/english/');

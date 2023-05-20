@@ -56,7 +56,7 @@ function English() {
     }, [spokenText]);
 
     const handleclick = () => {
-        navigate('/english/');
+        navigate('/chinese/');
         window.location.reload();
     };
 
