@@ -7,6 +7,7 @@ from nltk import sent_tokenize, word_tokenize
 import base64
 from google.cloud import texttospeech
 
+
 buf = []
 time_out_counter = 0
 
@@ -24,7 +25,7 @@ class ChineseToEnglish(AsyncWebsocketConsumer):
         words = data.get('words')
         buf.extend(words)
         if type(words) == list:
-            words = ' '.join(words)
+            words = ''.join(words)
         if words:
             print('words:', words)
             trans_words = translate(words, 'en')
