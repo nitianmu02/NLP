@@ -36,7 +36,7 @@ button:hover {
 .title3{
     position: absolute;
     top: 25%;
-    left: 50%;
+    left: 51%;
     transform: translate(-50%, -50%);
     font-size: 30px;
 }
