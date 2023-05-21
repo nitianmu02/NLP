@@ -1,4 +1,5 @@
-# 导入requests库
+# used for test demo
+
 import requests
 import hashlib
 url = "http://api.fanyi.baidu.com/api/trans/vip/translate"
