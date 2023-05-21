@@ -21,7 +21,7 @@ button:hover {
 }
 .title{
     position: absolute;
-    top: 5%;
+    top: 4%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 30px;
