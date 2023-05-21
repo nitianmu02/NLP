@@ -10,7 +10,7 @@ function Chinese2() {
     const [audioData, setAudioData] = useState(null);
 
     const sendSpeechToBackend = (speechData) => {
-        const socket = new WebSocket('ws://localhost:8000/ws/result/')
+        const socket = new WebSocket('ws://localhost:8000/ws/chinese/')
         const words = speechData.trim().split(/([\u4E00-\u9FFF])/g).filter(word => word.trim() !== '')
         socket.onopen = () => {
             console.log('WebSocket connection established');

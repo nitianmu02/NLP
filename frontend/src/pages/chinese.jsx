@@ -15,7 +15,7 @@ function Chinese() {
     }
 
     const sendSpeechToBackend = (speechData) => {
-        const socket = new WebSocket('ws://localhost:8000/ws/result/')
+        const socket = new WebSocket('ws://localhost:8000/ws/chinese/')
         socket.onopen = () => {
             console.log('WebSocket connection established')
             socket.send(JSON.stringify({ words: speechData }))

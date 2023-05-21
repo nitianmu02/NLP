@@ -10,7 +10,7 @@ from google.cloud import texttospeech
 buf = []
 time_out_counter = 0
 
-class SpeechConsumer(AsyncWebsocketConsumer):
+class ChineseToEnglish(AsyncWebsocketConsumer):
     
     async def connect(self):
         await self.accept()
@@ -22,11 +22,11 @@ class SpeechConsumer(AsyncWebsocketConsumer):
         # Print the received text_data
         data = json.loads(text_data)
         words = data.get('words')
-        print("frontend:", words)
         buf.extend(words)
         if type(words) == list:
-            words = ''.join(words)
+            words = ' '.join(words)
         if words:
+            print('words:', words)
             trans_words = translate(words, 'en')
             response_audio = await self.text_to_speech(trans_words)
             await self.send_audio(trans_words, response_audio)
@@ -46,6 +46,53 @@ class SpeechConsumer(AsyncWebsocketConsumer):
         synthesis_input = texttospeech.SynthesisInput(text=text)
         voice = texttospeech.VoiceSelectionParams(
             language_code='en-US', ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+        )
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.MP3
+        )
+
+        response = tts_client.synthesize_speech(
+            input=synthesis_input, voice=voice, audio_config=audio_config
+        )
+
+        return response.audio_content
+    
+class EnglishToChinese(AsyncWebsocketConsumer):
+    
+    async def connect(self):
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        pass
+
+    async def receive(self, text_data):
+        # Print the received text_data
+        data = json.loads(text_data)
+        words = data.get('words')
+        buf.extend(words)
+        if type(words) == list:
+            words = ' '.join(words)
+        if words:
+            print('words:', words)
+            trans_words = translate(words, 'zh')
+            response_audio = await self.text_to_speech(trans_words)
+            await self.send_audio(trans_words, response_audio)
+
+    async def send_audio(self, message, audio_data):
+        # Convert audio data to base64
+        encoded_audio = base64.b64encode(audio_data).decode('utf-8')
+        # Send the audio data to the WebSocket connection
+        await self.send(text_data=json.dumps({
+            'message': message,
+            'audio': encoded_audio
+        }))
+        
+    async def text_to_speech(self, text):
+        tts_client = texttospeech.TextToSpeechClient.from_service_account_json('tensile-sorter-373800-fe36c81d1e4f.json')
+
+        synthesis_input = texttospeech.SynthesisInput(text=text)
+        voice = texttospeech.VoiceSelectionParams(
+            language_code='zh-CN', ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
         )
         audio_config = texttospeech.AudioConfig(
             audio_encoding=texttospeech.AudioEncoding.MP3

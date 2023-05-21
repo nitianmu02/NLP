@@ -8,7 +8,7 @@ function English2() {
     const [translatedText, setTranslatedText] = useState('');
 
     const sendSpeechToBackend = async (speechData) => {
-        const socket = new WebSocket('ws://localhost:8000/ws/result/');
+        const socket = new WebSocket('ws://localhost:8000/ws/english/');
         socket.onopen = () => {
             const words = speechData.trim().split(' ')
             console.log('WebSocket connection established');
