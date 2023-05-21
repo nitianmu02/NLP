@@ -7,20 +7,20 @@ function Chinese2() {
     const [spokenText, setSpokenText] = useState('');
     const [interimTranscript, setInterimTranscript] = useState('');
     const [translatedText, setTranslatedText] = useState('')
-    const [audioData, setAudioData] = useState(null);
+    const [audioData, setAudioData] = useState(null)
 
     const sendSpeechToBackend = (speechData) => {
         const socket = new WebSocket('ws://localhost:8000/ws/chinese/')
         const words = speechData.trim().split(/([\u4E00-\u9FFF])/g).filter(word => word.trim() !== '')
         socket.onopen = () => {
-            console.log('WebSocket connection established');
-            socket.send(JSON.stringify({ words: words }));
+            console.log('WebSocket connection established')
+            socket.send(JSON.stringify({ words: words }))
         };
         socket.onmessage = (event) => {
-            const res = JSON.parse(event.data);
-            console.log('res:', res);
-            setTranslatedText(res.message);
-            setAudioData(res.audio);
+            const res = JSON.parse(event.data)
+            console.log('res:', res)
+            setTranslatedText(res.message)
+            setAudioData(res.audio)
             socket.close();
         };
     };
