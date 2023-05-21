@@ -13,3 +13,13 @@ django-cors-headers
 djangorestframework
 deepmultilingualpunctuation
 pysbd
+Cython
+librosa
+matplotlib
+numpy
+phonemizer
+scipy
+Unidecode
+pypinyin
+pypinyin_dict
+jieba

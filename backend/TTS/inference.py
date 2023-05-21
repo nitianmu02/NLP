@@ -4,7 +4,7 @@ import IPython.display as ipd
 import torch
 import commons
 import utils
-from VITS.models import SynthesizerTrn
+from TTS.models import SynthesizerTrn
 from text.symbols import symbols
 from text import text_to_sequence
 import soundfile as sf
