@@ -1,31 +1,18 @@
-frontend:
 
-cd frontend
+## Set and run backend:
 
-npm install
+- pip install -r requirements.txt
 
-npm start
+- cd backend
+
+- python manage.py runserver
 
 ---------------------------------
 
-backend:
+## Set and run frontend:
 
-cd backend
+- cd frontend
 
-pip install django==3.1
+- npm install
 
-pip install channels==3.0.1
-
-pip install django-core
-
-pip install django-cors-headers
-
-pip install djangorestframework
-
-pip install deepmultilingualpunctuation
-
-pip install pysbd
-
-pip install google-cloud-texttospeech
-
-python manage.py runserver
+- npm start
