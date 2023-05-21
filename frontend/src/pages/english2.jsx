@@ -89,11 +89,11 @@ function English2() {
     return (
         <div className="main">
             <section className="main-content">
-                <div className="title">Text:</div>
+                {!spokenText && <div className="title">Text: </div>}
                 <div className="spoken">{spokenText} </div>
                 <div className="interim">{interimTranscript !== '' ? interimTranscript : 'Say something in English...'}</div>
                 <div className="title2">Translate:</div>
-                <div className="translate">{translatedText}</div>
+                {!translatedText && <div className="title2">Translate: </div>}
                 <button className="btn" onClick={handleclick}>Chinese to English</button>
             </section>
         </div>

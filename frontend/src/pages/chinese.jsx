@@ -94,10 +94,10 @@ function Chinese() {
         <div className="main">
             {!buttonVisible && <button className="btn2" onClick={handleClick}>Let's start</button>}
             {buttonVisible && <section className="main-content">
-                <div className="title">文本：</div>
+                {!spokenText && <div className="title">文本：</div>}
                 <div className="spoken">{spokenText}</div>
                 <div className="interim">{interimTranscript !== '' ? interimTranscript : '用中文说点什么...'}</div>
-                <div className="title2">翻译：</div>
+                {!translatedText && <div className="title2">翻译：</div>}
                 <div className="translate">{translatedText}</div>
                 <button className="btn" onClick={handleclick}>英 译 中</button>
             </section>}
