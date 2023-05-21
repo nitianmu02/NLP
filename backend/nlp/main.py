@@ -1,5 +1,5 @@
 import pysbd
-from deepmultilingualpunctuation import PunctuationModel
+# from deepmultilingualpunctuation import PunctuationModel
 from .translate import translate
 import threading
 import time
@@ -13,7 +13,7 @@ seg_eng = pysbd.Segmenter(language="en", clean=False)
 buf = []
 nlp = spacy.blank('zh')
 nlp.add_pipe('sentencizer')
-punc = PunctuationModel()
+# punc = PunctuationModel()
 time_out_counter = 0
 
 def translate_thread():
@@ -23,7 +23,7 @@ def translate_thread():
         if buf:
             print("buf:", buf)
             snt = ' '.join(buf)
-            snt = punc.restore_punc(snt)
+            # snt = punc.restore_punc(snt)
             print("sentence:", snt)
             seg = seg_eng.segment(snt)
             print("sbd:", seg)
@@ -45,7 +45,7 @@ def sbd(buf, lang):
         snt = ''.join(buf)
     elif lang == 'en':
         snt = ' '.join(buf)
-        snt = punc.restore_punc(snt)
+        # snt = punc.restore_punc(snt)
         seg = seg_eng.segment(snt)
         seg = nlp(snt)
         seg = [sent.text for sent in seg.sents]
