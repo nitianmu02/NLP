@@ -254,7 +254,8 @@ def infer_step(inputs, args, task, max_positions, src_dict, align_dict, tgt_dict
 
 def cli_main():
     # print(sys.argv)
-    sys.argv = ['/Users/baowudi/Documents/NLP/backend/nlp/latent_glat/fairseq/fairseq_cli/interactive.py', '/Users/baowudi/Documents/NLP/backend/nlp/latent_glat/dataset/data-bin', '--user-dir', '/Users/baowudi/Documents/NLP/backend/nlp/latent_glat/latent_glat', '--task', 'nat', '--source-lang', 'zh', '--target-lang', 'en', '--path', '/Users/baowudi/Documents/NLP/backend/nlp/latent_glat/models/checkpoint_best.pt', '--remove-bpe', 'true', '--batch-size', '1']
+    print(os.path.abspath(os.path.join(os.getcwd(), "../..")))
+    sys.argv = ['./nlp/latent_glat/fairseq/fairseq_cli/interactive.py', './nlp/latent_glat/dataset/data-bin', '--user-dir', './nlp/latent_glat/latent_glat', '--task', 'nat', '--source-lang', 'zh', '--target-lang', 'en', '--path', './nlp/latent_glat/models/checkpoint_best.pt', '--remove-bpe', 'true', '--batch-size', '1']
     parser = options.get_interactive_generation_parser()
     args = options.parse_args_and_arch(parser)
     # distributed_utils.call_main(args, main)

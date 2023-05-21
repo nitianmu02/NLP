@@ -13,3 +13,4 @@ django-cors-headers
 djangorestframework
 deepmultilingualpunctuation
 pysbd
+jieba
