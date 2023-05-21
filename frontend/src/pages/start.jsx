@@ -13,7 +13,7 @@ function Start() {
     }
     return (
         <div className='main'>
-            <div className='title'>
+            <div className='title3'>
                 <Texty>Simultaneous Interpretation</Texty>
             </div>
             <QueueAnim delay={600} className="queue-simple">

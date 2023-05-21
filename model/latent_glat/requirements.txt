@@ -1,0 +1,8 @@
+torch >= 1.7.0
+nltk==3.5
+revtok
+tensorboard
+tensorboardX
+tqdm==4.50.2
+sacremoses
+sacrebleu==1.4.14
